@@ -9,7 +9,7 @@
 public class AssignmentOne {
 
     public static void main(String[] args) {
-        Tree tree = new Tree(2, 3);
+        Tree tree = new Tree(5, 21);
 
         System.out.println(tree.getRootNode());
         System.out.println(tree.getRootNode().getChildren());
