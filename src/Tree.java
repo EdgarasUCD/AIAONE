@@ -29,9 +29,9 @@ public class Tree {
 
         int T = T_INVALID;
 
-        do {
+        while (T == T_INVALID) {
             T = random.nextInt(T_MAX - T_MIN + 1) + T_MIN;
-        } while (T == T_INVALID);
+        }
 
         rootNode = new Node(null, branchingFactor);
 
@@ -51,7 +51,7 @@ public class Tree {
                 for (int i = 0; i < currentNode.getChildren().length; i++) {
                     count++;
 
-                    int chance = random.nextInt(100) + 1;
+                    int chance = random.nextInt(CHANCE) + 1;
                     int generatedBranchingFactor = branchingFactor;
 
                     if (chance <= 5) {

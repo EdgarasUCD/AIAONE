@@ -10,7 +10,6 @@ public class Node {
 
     private Node parent;
     private Node[] children;
-    private int childrenPointer;
     private int staticEvaluationValue;
 
     public Node(Node parent, int childrenCount) {
@@ -38,10 +37,13 @@ public class Node {
         return children;
     }
 
-    public void addChild(Node child) {
-        if (childrenPointer < children.length) {
-            children[childrenPointer++] = child;
+    public boolean addChild(Node child) {
+        for (int i = 0; i < children.length; i++) {
+            if (children[i] == null) continue;
+            children[i] = child;
+            return true;
         }
+        return false;
     }
 
 }
