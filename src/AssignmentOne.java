@@ -9,8 +9,9 @@
 public class AssignmentOne {
 
     public static void main(String[] args) {
-        Tree tree = new Tree(5, 21);
+        Tree tree = new Tree(5, 21, 555);
 
+//        Tree tree = new Tree(3, 3, 150);
         System.out.println(tree.getRootNode());
         System.out.println(tree.getRootNode().getChildren());
         System.out.println(tree.getRootNode().getParent());

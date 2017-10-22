@@ -34,4 +34,5 @@ public class CustomEntry<K, V> implements Map.Entry<K, V> {
         this.value = value;
         return oldValue;
     }
+
 }

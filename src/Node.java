@@ -10,11 +10,16 @@ public class Node {
 
     private Node parent;
     private Node[] children;
-    private int staticEvaluationValue;
+    private int E;
 
-    public Node(Node parent, int childrenCount) {
+    public Node(Node parent, int E, int childrenCount) {
         this.parent = parent;
+        this.E = E;
         this.children = new Node[childrenCount];
+    }
+
+    public int getE() {
+        return E;
     }
 
     public boolean isLeaf() {
@@ -38,10 +43,12 @@ public class Node {
     }
 
     public boolean addChild(Node child) {
-        for (int i = 0; i < children.length; i++) {
-            if (children[i] == null) continue;
-            children[i] = child;
-            return true;
+        if (children[children.length - 1] != null) {
+            for (int i = 0; i < children.length; i++) {
+                if (children[i] == null) continue;
+                children[i] = child;
+                return true;
+            }
         }
         return false;
     }

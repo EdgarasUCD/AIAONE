@@ -19,10 +19,12 @@ public class Tree {
     private Node rootNode;
     private int depth;
     private int branchingFactor;
+    private int approximation;
 
-    public Tree(int depth, int branchingFactor) {
+    public Tree(int depth, int branchingFactor, int approximation) {
         this.depth = depth;
         this.branchingFactor = branchingFactor;
+        this.approximation = approximation;
 
         Random random = new Random();
 //        random.setSeed(2017);
@@ -30,10 +32,10 @@ public class Tree {
         int T = T_INVALID;
 
         while (T == T_INVALID) {
-            T = random.nextInt(T_MAX - T_MIN + 1) + T_MIN;
+            T = random.nextInt((T_MAX - T_MIN) + 1) + T_MIN;
         }
 
-        rootNode = new Node(null, branchingFactor);
+        rootNode = new Node(null, T, branchingFactor);
 
         Map<Node, Integer> toTraverse = new LinkedHashMap<Node, Integer>();
 
@@ -47,9 +49,18 @@ public class Tree {
         do {
             Node currentNode = currentEntry.getKey();
             currentDepth = currentEntry.getValue() + 1;
-            if (currentDepth <= depth) {
-                for (int i = 0; i < currentNode.getChildren().length; i++) {
+            int E = currentNode.getE();
+            if (currentDepth <= depth && E <= 10000) {
+
+                int childrenCount = currentNode.getChildren().length;
+
+                // Currently only one is negated
+                int negateIndex = random.nextInt(childrenCount);
+
+                for (int i = 0; i < childrenCount; i++) {
                     count++;
+
+                    // branching factor b with 90% chance, b+1 with 5% chance, b-1 with 5% chance
 
                     int chance = random.nextInt(CHANCE) + 1;
                     int generatedBranchingFactor = branchingFactor;
@@ -60,7 +71,10 @@ public class Tree {
                         generatedBranchingFactor--;
                     }
 
-                    Node child = new Node(currentNode, generatedBranchingFactor);
+                    // generate ∂, where ∂ is a small number between -Approx and +Approx chosen randomly for each one individually.
+
+                    // Clamp value to be greater than or equal to parent E and no more than 10000.
+                    Node child = new Node(currentNode, (negateIndex == i) ? -E : Math.min(Math.max(E + generateD(random), E), 10000), generatedBranchingFactor);
                     currentNode.addChild(child);
                     toTraverse.put(child, currentDepth);
                 }
@@ -94,6 +108,10 @@ public class Tree {
 
     public int getBranchingFactor() {
         return branchingFactor;
+    }
+
+    private int generateD(Random random) {
+        return random.nextInt(approximation * 2 + 1) -approximation;
     }
 
 }
