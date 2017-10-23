@@ -42,14 +42,19 @@ public class Tree {
         int currentDepth = 0;
         int count = 1;
 
-        Map.Entry<Node, Integer> currentEntry = new CustomEntry<Node, Integer>(rootNode, currentDepth);
+        Map.Entry<Node, Integer> currentEntry = new AbstractMap.SimpleEntry<Node, Integer>(rootNode, currentDepth);
 
         long t0 = System.currentTimeMillis();
+
+        int ec = 0;
 
         do {
             Node currentNode = currentEntry.getKey();
             currentDepth = currentEntry.getValue() + 1;
             int E = currentNode.getE();
+            if (E == 10000) {
+                ec++;
+            }
             if (currentDepth <= depth && E <= 10000) {
 
                 int childrenCount = currentNode.getChildren().length;
@@ -74,6 +79,10 @@ public class Tree {
                     // generate ∂, where ∂ is a small number between -Approx and +Approx chosen randomly for each one individually.
 
                     // Clamp value to be greater than or equal to parent E and no more than 10000.
+
+                    //1 There may be several daughters that happen to have this same value.
+                    // If parent node is -500 and approx is -1000 to 1000 inclusive.
+                    // because of E = T + ∂ we might get 500 if we generate 1000 therefore it means that it is the same as parent but negated.
                     Node child = new Node(currentNode, (negateIndex == i) ? -E : Math.min(Math.max(E + generateD(random), E), 10000), generatedBranchingFactor);
                     currentNode.addChild(child);
                     toTraverse.put(child, currentDepth);
@@ -89,6 +98,8 @@ public class Tree {
             }
 
         } while(!toTraverse.isEmpty());
+
+        System.out.println(ec);
 
         long t1 = System.currentTimeMillis();
 
