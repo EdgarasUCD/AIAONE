@@ -8,34 +8,37 @@
 
 public class Node {
 
-    private Node parent;
     private Node[] children;
+    private Node[] originalChildrenOrder;
     private int E;
+    public int order;
 
-    public Node(Node parent, int E, int childrenCount) {
-        this.parent = parent;
+    public Node(int E, int childrenCount) {
         this.E = E;
         this.children = new Node[childrenCount];
+        originalChildrenOrder = new Node[childrenCount];
+    }
+
+    public Node(Node node) {
+        this(node.getE(), node.getChildren().length);
     }
 
     public int getE() {
         return E;
     }
 
+    public int setE(int E) {
+        int temp = this.E;
+        this.E = E;
+        return temp;
+    }
+
     public boolean isLeaf() {
-        return children.length == 0;
+        return children[children.length - 1] == null;
     }
 
     public boolean isInternal() {
         return children.length != 0;
-    }
-
-    public boolean isRoot() {
-        return parent == null;
-    }
-
-    public Node getParent() {
-        return parent;
     }
 
     public Node[] getChildren() {
@@ -43,14 +46,27 @@ public class Node {
     }
 
     public boolean addChild(Node child) {
-        if (children[children.length - 1] != null) {
+        if (children[children.length - 1] == null) {
             for (int i = 0; i < children.length; i++) {
-                if (children[i] == null) continue;
+                if (children[i] != null) continue;
                 children[i] = child;
+                originalChildrenOrder[i] = child;
+//                originalChildrenOrder[i] = new Node(child);
+                // TODO DEEP COPY
                 return true;
             }
         }
         return false;
+    }
+
+    public void swap(int indexOne, int indexTwo) {
+        Node temp = children[indexOne];
+        children[indexOne] = children[indexTwo];
+        children[indexTwo] = temp;
+    }
+
+    public void reset() {
+        children = originalChildrenOrder.clone();
     }
 
 }

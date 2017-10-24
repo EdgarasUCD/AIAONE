@@ -8,13 +8,46 @@
 
 public class AssignmentOne {
 
-    public static void main(String[] args) {
-        Tree tree = new Tree(5, 21, 2500);
+    public static final int ALPHA = -10000;
+    public static final int BETA = 10000;
 
-//        Tree tree = new Tree(3, 3, 150);
-        System.out.println(tree.getRootNode());
-        System.out.println(tree.getRootNode().getChildren());
-        System.out.println(tree.getRootNode().getParent());
+    public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
+        new AssignmentOne();
+        System.out.println("Milisec taken: " + (System.currentTimeMillis() - startTime));
+    }
+
+    public AssignmentOne() {
+        Tree tree = new Tree(2, 3, 150);
+
+        System.out.println("=========================");
+        System.out.println("Running NiggaMax");
+        System.out.println("=========================");
+        negaMax(tree.getRootNode(), tree.getDepth(), ALPHA, BETA);
+        System.out.println("=========================");
+        System.out.println("MEDELALIS");
+        System.out.println("=========================");
+        tree.reset();
+    }
+
+    private int negaMax(Node node, int height, int achievable, int hope) {
+        System.out.println("Looking at node: " + node.order);
+        if (height == 0 || node.isLeaf()) {
+            System.out.println("height == 0 || node.isLeaf() : " + node.getE());
+            return node.getE();
+        } else {
+            int temp;
+            for (Node m : node.getChildren()) {
+                temp = -negaMax(m, height - 1, -hope, -achievable);
+                if (temp >= hope) {
+                    System.out.println("temp >= hope : " + temp);
+                    return temp;
+                }
+                achievable = Math.max(temp, achievable);
+            }
+        }
+            System.out.println("return achievable; : " + achievable);
+            return achievable;
     }
 
 }
