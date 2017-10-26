@@ -98,7 +98,6 @@ public class Tree {
                     if (E < WIN_STATE) {
                         toTraverse.put(child, currentDepth);
                     } else {
-                        System.out.println("aaa");
                         winStateNodeCount++;
                     }
 

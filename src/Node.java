@@ -11,7 +11,7 @@ public class Node {
     private Node[] children;
     private Node[] originalChildrenOrder;
     private int E;
-    public int order;
+    public int order; // ONLY USED FOR TESTING PURPOSES, DELETE BEFORE SUBMISSION.
 
     public Node(int E, int childrenCount) {
         this.E = E;
@@ -67,6 +67,12 @@ public class Node {
 
     public void reset() {
         children = originalChildrenOrder.clone();
+    }
+
+    // ONLY USED FOR TESTING PURPOSES, DELETE BEFORE SUBMISSION.
+    @Override
+    public String toString() {
+        return "[" + order + ", " + E + "]";
     }
 
 }
