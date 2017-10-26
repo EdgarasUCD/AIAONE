@@ -27,11 +27,13 @@ public class AssignmentOne {
         System.out.println("=========================");
         System.out.println("Running NegaMax");
         System.out.println("=========================");
-        LinkedHashMap<Node, List<Node>> pvMap = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, new LinkedHashMap<Node, List<Node>>());
+//        LinkedHashMap<Node, List<Node>> pvMap = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, new LinkedHashMap<Node, List<Node>>());
+        Entry<LinkedHashMap<Node, List<Node>>, Integer> returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, new Entry(new LinkedHashMap<Node, List<Node>>(), new Integer(0)));
 
-        List<Node> current = pvMap.get(tree.getRootNode());
+        List<Node> current = returnObject.getKey().get(tree.getRootNode());
 
         System.out.println("=========================");
+        System.out.println("Number of evals: " + returnObject.getValue());
         System.out.println("Kelias iki best leaf nuo root node");
         System.out.println("=========================");
 
@@ -45,7 +47,8 @@ public class AssignmentOne {
         tree.reset();
     }
 
-    private LinkedHashMap<Node, List<Node>> negaMax(Node node, int height, Entry achievable, int hope, LinkedHashMap<Node, List<Node>> pvMap) {
+    private Entry negaMax(Node node, int height, Entry<Node, Integer> achievable, int hope, Entry<LinkedHashMap<Node, List<Node>>, Integer> returnObject) {
+        LinkedHashMap<Node, List<Node>> pvMap = returnObject.getKey();
 
         if (!pvMap.containsKey(node)) {
             pvMap.put(node, new ArrayList<Node>());
@@ -54,13 +57,12 @@ public class AssignmentOne {
         System.out.println("Looking at node: " + node.order);
         if (height == 0 || node.isLeaf()) {
             System.out.println("=== height == 0 || node.isLeaf() : " + node.getE() + " ===");
-            return pvMap;
+            returnObject.setValue(returnObject.getValue() + 1);
+            return returnObject;
         } else {
             int temp;
             for (Node m : node.getChildren()) {
-                negaMax(m, height - 1, new Entry((Node) achievable.getKey(), -hope), - ((int) achievable.getValue()), pvMap);
-
-                int achievableValue = (int) achievable.getValue();
+                negaMax(m, height - 1, new Entry(achievable.getKey(), -hope), -achievable.getValue(), returnObject);
 
                 temp = -m.getE();
                 if (temp >= hope) {
@@ -71,25 +73,24 @@ public class AssignmentOne {
                     List<Node> nodePv = pvMap.get(node);
                     nodePv.add(m);
                     nodePv.addAll(pvMap.get(m));
-                    return pvMap;
+                    return returnObject;
                 }
 
-                if (temp > achievableValue) {
+                if (temp > achievable.getValue()) {
                     achievable.setKey(m);
                     achievable.setValue(temp);
                     // pvMap.node already has node in it by returned call because of height or is leaf.
-                } else if (achievableValue > temp) {
+                } else if (achievable.getValue() > temp) {
                     System.out.println("ACHIEVABLE IS GREATER THAN TEMP");
                 }
 
             }
         }
-        Node achievableNode = (Node) achievable.getKey();
         List<Node> nodePv = pvMap.get(node);
-        nodePv.add(achievableNode);
-        nodePv.addAll(pvMap.get(achievableNode));
-        System.out.println("=== return achievable; : " + achievableNode + " ===");
-        return pvMap;
+        nodePv.add(achievable.getKey());
+        nodePv.addAll(pvMap.get(achievable.getKey()));
+        System.out.println("=== return achievable; : " + achievable.getKey() + " ===");
+        return returnObject;
     }
 
 }
