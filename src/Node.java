@@ -50,8 +50,8 @@ public class Node {
             for (int i = 0; i < children.length; i++) {
                 if (children[i] != null) continue;
                 children[i] = child;
-                originalChildrenOrder[i] = child;
-//                originalChildrenOrder[i] = new Node(child);
+//                originalChildrenOrder[i] = child;
+                originalChildrenOrder[i] = new Node(child);
                 // TODO DEEP COPY
                 return true;
             }
@@ -59,20 +59,60 @@ public class Node {
         return false;
     }
 
-    public void swap(int indexOne, int indexTwo) {
-        Node temp = children[indexOne];
-        children[indexOne] = children[indexTwo];
-        children[indexTwo] = temp;
+    public int getChildIndex(Node node) {
+        for (int i = 0; i < children.length; i++) {
+            if (node == children[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void reorder(Node node) {
+        int index = getChildIndex(node);
+        if (index == -1) return;
+
+        Node[] reorderedArray = new Node[children.length];
+//        reorderedArray[0] = children[index];
+
+        boolean found = false;
+
+        for (int i = 0; i < children.length; i++) {
+            int store = (index == i) ? 0 : i + 1;
+
+            if (index == i) {
+                store = 0;
+                found = true;
+            } else {
+                store = (found) ? i : i + 1;
+            }
+            reorderedArray[store] = children[i];
+        }
+
+//        for (int i = 0; i < children.length; i++) {
+//            int store = i + i;
+//            if (i == index) {
+//                i++;
+//                if (index == children.length - 1) {
+//                    break;
+//                }
+//            }
+//            reorderedArray[store] = children[i];
+//        }
+
+        children = reorderedArray;
     }
 
     public void reset() {
-        children = originalChildrenOrder.clone();
+        for (int i = 0; i < children.length; i++) {
+            children[i] = new Node(originalChildrenOrder[i]);
+        }
     }
 
     // ONLY USED FOR TESTING PURPOSES, DELETE BEFORE SUBMISSION.
     @Override
     public String toString() {
-        return "[" + order + ", " + E + "]";
+        return "[" + order + ", " + E + ", ]";
     }
 
 }

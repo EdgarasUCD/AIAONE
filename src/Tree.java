@@ -80,6 +80,7 @@ public class Tree {
                     int chance = random.nextInt(CHANCE) + 1;
                     int generatedBranchingFactor = branchingFactor;
 
+                    // FIXME Disabled for testing. TO BE UNCOMMENTED FOR SUBMISSION.
 //                    if (currentNode != rootNode) {
 //                        if (chance <= 5) {
 //                            generatedBranchingFactor++;
@@ -144,7 +145,7 @@ public class Tree {
             Node currentNode = stack.pop();
             System.out.println(currentNode.order + " - " + currentNode.getE());
 
-            currentNode.reset();
+//            currentNode.reset();
 
             Node[] currentNodeChildren = currentNode.getChildren();
 
