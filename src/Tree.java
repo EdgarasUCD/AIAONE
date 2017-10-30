@@ -66,7 +66,7 @@ public class Tree {
             currentDepth = currentEntry.getValue() + 1;
 
             if (currentDepth <= depth) {
-                int childrenCount = currentNode.getChildren().length;
+                int childrenCount = currentNode.getChildren(false).length;
 
                 // Negate at least one random node.
                 int negateIndex = random.nextInt(childrenCount);
@@ -147,7 +147,7 @@ public class Tree {
 
 //            currentNode.reset();
 
-            Node[] currentNodeChildren = currentNode.getChildren();
+            Node[] currentNodeChildren = currentNode.getChildren(false);
 
             for (int i = currentNodeChildren.length - 1; i >= 0 && currentNodeChildren[0] != null; i--) {
                 stack.push(currentNodeChildren[i]);

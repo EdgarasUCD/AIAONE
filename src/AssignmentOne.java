@@ -23,21 +23,17 @@ public class AssignmentOne {
     }
 
     private void principalVariationReordering(Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnedObject) {
-        LinkedHashMap<Node, Entry<Integer, List<Node>>> pvMap = returnedObject.getKey();
-
         Map.Entry<Node, Entry<Integer, List<Node>>> currentNodeEntry = returnedObject.getKey().entrySet().iterator().next();
-
         Node currentNode = currentNodeEntry.getKey();
 
         for (Node node : currentNodeEntry.getValue().getValue()) {
             currentNode.reorder(node);
             currentNode = node;
         }
-
     }
 
     public AssignmentOne() {
-        Tree tree = new Tree(5, 20, 150);
+        Tree tree = new Tree(5, 21, 150);
 
         long t0 = System.currentTimeMillis();
 
@@ -45,7 +41,7 @@ public class AssignmentOne {
         System.out.println("Running NegaMax");
         System.out.println("=========================");
 
-        Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
+        Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
 
         long t1 = System.currentTimeMillis();
 
@@ -85,7 +81,7 @@ public class AssignmentOne {
         System.out.println("Running NegaMax");
         System.out.println("=========================");
 
-        returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
+        returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
 
         t1 = System.currentTimeMillis();
 
@@ -107,7 +103,7 @@ public class AssignmentOne {
 
     }
 
-    private Entry negaMax(Node node, int height, Entry<Node, Integer> achievable, int hope, Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnObject) {
+    private Entry negaMax(Node node, int height, Entry<Node, Integer> achievable, int hope, boolean modifiable, Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnObject) {
         LinkedHashMap<Node, Entry<Integer, List<Node>>> pvMap = returnObject.getKey();
 
         if (!pvMap.containsKey(node)) {
@@ -121,8 +117,8 @@ public class AssignmentOne {
             return returnObject;
         } else {
             int temp;
-            for (Node m : node.getChildren()) {
-                negaMax(m, height - 1, new Entry(achievable.getKey(), -hope), -achievable.getValue(), returnObject);
+            for (Node m : node.getChildren(modifiable)) {
+                negaMax(m, height - 1, new Entry(achievable.getKey(), -hope), -achievable.getValue(), modifiable, returnObject);
 
                 temp = -m.getE();
                 if (temp >= hope) {

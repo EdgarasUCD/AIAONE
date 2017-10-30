@@ -20,7 +20,7 @@ public class Node {
     }
 
     public Node(Node node) {
-        this(node.getE(), node.getChildren().length);
+        this(node.getE(), node.getChildren(false).length);
     }
 
     public int getE() {
@@ -41,8 +41,11 @@ public class Node {
         return children.length != 0;
     }
 
-    public Node[] getChildren() {
-        return children;
+    public Node[] getChildren(boolean modifiable) {
+        if (modifiable) {
+            return children;
+        }
+        return originalChildrenOrder;
     }
 
     public boolean addChild(Node child) {
@@ -50,9 +53,7 @@ public class Node {
             for (int i = 0; i < children.length; i++) {
                 if (children[i] != null) continue;
                 children[i] = child;
-//                originalChildrenOrder[i] = child;
                 originalChildrenOrder[i] = new Node(child);
-                // TODO DEEP COPY
                 return true;
             }
         }
@@ -73,12 +74,11 @@ public class Node {
         if (index == -1) return;
 
         Node[] reorderedArray = new Node[children.length];
-//        reorderedArray[0] = children[index];
 
         boolean found = false;
 
         for (int i = 0; i < children.length; i++) {
-            int store = (index == i) ? 0 : i + 1;
+            int store;
 
             if (index == i) {
                 store = 0;
@@ -88,17 +88,6 @@ public class Node {
             }
             reorderedArray[store] = children[i];
         }
-
-//        for (int i = 0; i < children.length; i++) {
-//            int store = i + i;
-//            if (i == index) {
-//                i++;
-//                if (index == children.length - 1) {
-//                    break;
-//                }
-//            }
-//            reorderedArray[store] = children[i];
-//        }
 
         children = reorderedArray;
     }
