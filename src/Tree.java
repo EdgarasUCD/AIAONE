@@ -68,7 +68,7 @@ public class Tree {
             if (currentDepth <= depth) {
                 int childrenCount = currentNode.getChildren(false).length;
 
-                // Negate at least one random node.
+                // Negate at least one random node.Klaipėda, Lithuania
                 int negateIndex = random.nextInt(childrenCount);
                 T = -T;
 
@@ -143,12 +143,8 @@ public class Tree {
 
         do {
             Node currentNode = stack.pop();
-            System.out.println(currentNode.order + " - " + currentNode.getE());
-
-//            currentNode.reset();
-
+            currentNode.reset();
             Node[] currentNodeChildren = currentNode.getChildren(false);
-
             for (int i = currentNodeChildren.length - 1; i >= 0 && currentNodeChildren[0] != null; i--) {
                 stack.push(currentNodeChildren[i]);
             }

@@ -101,7 +101,7 @@ public class Node {
     // ONLY USED FOR TESTING PURPOSES, DELETE BEFORE SUBMISSION.
     @Override
     public String toString() {
-        return "[" + order + ", " + E + ", ]";
+        return "[" + order + ", " + E + "]";
     }
 
 }

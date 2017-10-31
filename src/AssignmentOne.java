@@ -35,6 +35,21 @@ public class AssignmentOne {
     public AssignmentOne() {
         Tree tree = new Tree(5, 21, 150);
 
+//        Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
+//
+//        long t0 = System.currentTimeMillis();
+//        System.out.println(principalVariationSearch(tree.getRootNode(), ALPHA, BETA, tree.getDepth()));
+//        long t1 = System.currentTimeMillis();
+//        System.out.println("TIME TAKEN : " + (t1 - t0));
+//
+//        principalVariationReordering(returnObject);
+//
+//        t0 = System.currentTimeMillis();
+//        System.out.println(principalVariationSearch(tree.getRootNode(), ALPHA, BETA, tree.getDepth()));
+//        t1 = System.currentTimeMillis();
+//        System.out.println("TIME TAKEN : " + (t1 - t0));
+
+
         long t0 = System.currentTimeMillis();
 
         System.out.println("=========================");
@@ -52,7 +67,6 @@ public class AssignmentOne {
 
         System.out.println("=========================");
         System.out.println("Number of evals: " + returnObject.getValue());
-        System.out.println("Kelias iki best leaf nuo root node");
         System.out.println("=========================");
 
         System.out.println("[0, " + rootNodeEntry.getKey() + "]");
@@ -92,7 +106,6 @@ public class AssignmentOne {
 
         System.out.println("=========================");
         System.out.println("Number of evals: " + returnObject.getValue());
-        System.out.println("Kelias iki best leaf nuo root node");
         System.out.println("=========================");
 
         System.out.println("[0, " + rootNodeEntry.getKey() + "]");
@@ -153,6 +166,31 @@ public class AssignmentOne {
 
 //        System.out.println("=== return achievable; : " + achievable.getKey() + " ===");
         return returnObject;
+    }
+
+    private int principalVariationSearch(Node node, int achievable, int hope, int depth) {
+        if (depth == 0 || node.isLeaf()) {
+            return node.getE();
+        } else {
+            Node[] children = node.getChildren(false);
+            int score = -principalVariationSearch(children[0], -hope, -achievable, depth - 1);
+            if (score < hope) {
+                for (int i = 1; i < children.length; i++) {
+                    Node child = children[i];
+                    int lowerBound = Math.max(achievable, score);
+                    int upperBound = lowerBound + 1;
+                    int temp = -principalVariationSearch(child, -upperBound, -lowerBound, depth - 1);
+                    if (temp >= upperBound && temp < hope) {
+                        temp = -principalVariationSearch(child, -hope, -temp, depth - 1);
+                    }
+                    score = Math.max(score, temp);
+                    if (temp >= hope) {
+                        break;
+                    }
+                }
+            }
+            return score;
+        }
     }
 
 }
