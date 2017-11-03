@@ -41,34 +41,33 @@ public class Tree {
         random = new Random();
 //      random.setSeed(2017);
 
-        int T = generateTrueValue(T_MAX, T_MIN);
+        final int STARTING_TRUE_VALUE = generateTrueValue(T_MAX, T_MIN);
 
-        System.out.println("Generated T: " + T);
+        System.out.println("Generated T: " + STARTING_TRUE_VALUE);
 
-        rootNode = new Node(T, branchingFactor);
+        rootNode = new Node(STARTING_TRUE_VALUE, branchingFactor);
 
         Map<Node, Integer> toTraverse = new LinkedHashMap<Node, Integer>();
 
         int currentDepth = 0;
         int nodeCount = 1;
         int winStateNodeCount = 0;
+        int T = 0;
 
         Map.Entry<Node, Integer> currentEntry = new AbstractMap.SimpleEntry<Node, Integer>(rootNode, currentDepth);
 
         do {
             Node currentNode = currentEntry.getKey();
+            currentDepth = currentEntry.getValue() + 1;
 
             // E is T at this point
             T = currentNode.getE();
 
-            currentNode.setE(currentNode.getE() + generateD());
-
-            currentDepth = currentEntry.getValue() + 1;
-
             if (currentDepth <= depth) {
+                currentNode.setE(currentNode.getE() + generateD());
                 int childrenCount = currentNode.getChildren(false).length;
 
-                // Negate at least one random node.Klaipėda, Lithuania
+                // Negate at least one random node.
                 int negateIndex = random.nextInt(childrenCount);
                 T = -T;
 
@@ -81,19 +80,20 @@ public class Tree {
                     int generatedBranchingFactor = branchingFactor;
 
                     // FIXME Disabled for testing. TO BE UNCOMMENTED FOR SUBMISSION.
-//                    if (currentNode != rootNode) {
-//                        if (chance <= 5) {
-//                            generatedBranchingFactor++;
-//                        } else if (chance > 5 && chance <= 10) {
-//                            generatedBranchingFactor--;
-//                        }
-//                    }
+                    if (currentNode != rootNode) {
+                        if (chance <= 5) {
+                            generatedBranchingFactor++;
+                        } else if (chance > 5 && chance <= 10) {
+                            generatedBranchingFactor--;
+                        }
+                    }
 
                     int E = (negateIndex == i) ? T : generateTrueValue(WIN_STATE, T);
 
                     Node child = new Node(E, generatedBranchingFactor);
                     child.order = nodeCount - 1;
 
+                    // modifiable tree will not work because has only first tree child, FIXME
                     currentNode.addChild(child);
 
                     if (E < WIN_STATE) {
@@ -132,8 +132,7 @@ public class Tree {
     }
 
     private int generateD() {
-    return 0;
-    //     return random.nextInt(approximation * 2 + 1) -approximation;
+        return random.nextInt(approximation * 2 + 1) -approximation;
     }
 
 
@@ -143,9 +142,12 @@ public class Tree {
 
         do {
             Node currentNode = stack.pop();
-            currentNode.reset();
-            Node[] currentNodeChildren = currentNode.getChildren(false);
-            for (int i = currentNodeChildren.length - 1; i >= 0 && currentNodeChildren[0] != null; i--) {
+//            currentNode.reset();
+            System.out.println(currentNode.order + " - " + currentNode.getE());
+            // FIXME CHANGE TO FALSE
+            Node[] currentNodeChildren = currentNode.getChildren(true);
+            for (int i = currentNodeChildren.length - 1; i >= 0; i--) {
+                if (currentNodeChildren[i] == null) continue;
                 stack.push(currentNodeChildren[i]);
             }
         } while (!stack.isEmpty());

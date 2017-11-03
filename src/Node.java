@@ -21,6 +21,7 @@ public class Node {
 
     public Node(Node node) {
         this(node.getE(), node.getChildren(false).length);
+        order = node.order;
     }
 
     public int getE() {
