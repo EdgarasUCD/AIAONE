@@ -115,8 +115,25 @@ public class Tree {
 
         } while(!toTraverse.isEmpty());
 
+        cloneOriginalOrderArray();
+
         System.out.println("Node count: " + nodeCount);
         System.out.println("Win state node count: " + winStateNodeCount);
+    }
+
+    private void cloneOriginalOrderArray() {
+        Stack<Node> stack = new Stack<Node>();
+        stack.push(rootNode);
+
+        do {
+            Node currentNode = stack.pop();
+            currentNode.cloneArray();
+            Node[] currentNodeChildren = currentNode.getChildren(true);
+            for (int i = currentNodeChildren.length - 1; i >= 0; i--) {
+                if (currentNodeChildren[i] == null) continue;
+                stack.push(currentNodeChildren[i]);
+            }
+        } while (!stack.isEmpty());
     }
 
     public Node getRootNode() {
@@ -135,6 +152,20 @@ public class Tree {
         return random.nextInt(approximation * 2 + 1) -approximation;
     }
 
+    public void print() {
+        Stack<Node> stack = new Stack<Node>();
+        stack.push(rootNode);
+
+        do {
+            Node currentNode = stack.pop();
+            System.out.println(currentNode.order + " - " + currentNode.getE());
+            Node[] currentNodeChildren = currentNode.getChildren(true);
+            for (int i = currentNodeChildren.length - 1; i >= 0; i--) {
+                if (currentNodeChildren[i] == null) continue;
+                stack.push(currentNodeChildren[i]);
+            }
+        } while (!stack.isEmpty());
+    }
 
     public void reset() {
         Stack<Node> stack = new Stack<Node>();
@@ -142,9 +173,7 @@ public class Tree {
 
         do {
             Node currentNode = stack.pop();
-//            currentNode.reset();
-            System.out.println(currentNode.order + " - " + currentNode.getE());
-            // FIXME CHANGE TO FALSE
+            currentNode.reset();
             Node[] currentNodeChildren = currentNode.getChildren(true);
             for (int i = currentNodeChildren.length - 1; i >= 0; i--) {
                 if (currentNodeChildren[i] == null) continue;

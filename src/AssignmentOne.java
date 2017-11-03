@@ -19,8 +19,8 @@ public class AssignmentOne {
         System.out.println("Milisec taken: " + (System.currentTimeMillis() - startTime));
     }
 
-    private void principalVariationReordering(Entry<LinkedHashMap<Node, Entry<Integer, Set<Node>>>, Integer> returnedObject) {
-        Map.Entry<Node, Entry<Integer, Set<Node>>> currentNodeEntry = returnedObject.getKey().entrySet().iterator().next();
+    private void principalVariationReordering(Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnedObject) {
+        Map.Entry<Node, Entry<Integer, List<Node>>> currentNodeEntry = returnedObject.getKey().entrySet().iterator().next();
         Node currentNode = currentNodeEntry.getKey();
 
         for (Node node : currentNodeEntry.getValue().getValue()) {
@@ -30,32 +30,32 @@ public class AssignmentOne {
     }
 
     public AssignmentOne() {
-        Tree tree = new Tree(6, 12, 150);
+        Tree tree = new Tree(6, 15, 150);
 
         Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnObject = null;
 
         System.out.println("[DEPTH, EVALS]");
         int totalNegamax = 0;
 
-        for (int i = 4; i <= tree.getDepth(); i++) {
-            returnObject = negaMax(tree.getRootNode(), i, new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
-
-            Entry<Integer, List<Node>> rootNodeEntry = returnObject.getKey().get(tree.getRootNode());
-            List<Node> current = rootNodeEntry.getValue();
-
-            int eval = returnObject.getValue();
-
-            System.out.println(" --- [" + i + ", " + returnObject.getValue() + "] ---");
-
-            // CAN REORDER
-
-//            for (Node node : current) {
-//                System.out.println(node);
-//            }
-//            System.out.println("============");
-
-            totalNegamax += eval;
-        }
+//        for (int i = 4; i <= tree.getDepth(); i++) {
+//            returnObject = negaMax(tree.getRootNode(), i, new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
+//
+//            Entry<Integer, List<Node>> rootNodeEntry = returnObject.getKey().get(tree.getRootNode());
+//            List<Node> current = rootNodeEntry.getValue();
+//
+//            int eval = returnObject.getValue();
+//
+//            System.out.println(" --- [" + i + ", " + returnObject.getValue() + "] ---");
+//
+//            // CAN REORDER
+//
+////            for (Node node : current) {
+////                System.out.println(node);
+////            }
+////            System.out.println("============");
+//
+//            totalNegamax += eval;
+//        }
 
         System.out.println("Total evals: " + totalNegamax);
 
@@ -64,6 +64,42 @@ public class AssignmentOne {
         Entry<Integer, Integer> entry = principalVariationSearch(tree.getRootNode(), ALPHA, BETA, tree.getDepth(), new Entry(0, 0));
         System.out.println(entry.getKey());
         System.out.println(entry.getValue());
+
+
+//        System.out.println("==============");
+//
+//        tree.print();
+//
+//        System.out.println("reorder");
+//        System.out.println("========");
+//
+//        principalVariationReordering(negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0)));
+//
+//        System.out.println("=================");
+//        tree.print();
+//
+//        System.out.println("===========original order array=============");
+//tree.reset();
+//tree.print();
+
+        returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
+        System.out.println(returnObject.getValue());
+
+        principalVariationReordering(returnObject);
+        System.out.println("reoder");
+
+        returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
+        System.out.println(returnObject.getValue());
+
+        tree.reset();
+
+        System.out.println("reset");
+
+        returnObject = negaMax(tree.getRootNode(), tree.getDepth(), new Entry(null, ALPHA), BETA, true, new Entry(new LinkedHashMap<Node, Entry<Integer, List<Node>>>(), 0));
+        System.out.println(returnObject.getValue());
+
+
+
     }
 
     private Entry negaMax(Node node, int height, Entry<Node, Integer> achievable, int hope, boolean modifiable, Entry<LinkedHashMap<Node, Entry<Integer, List<Node>>>, Integer> returnObject) {

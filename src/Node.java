@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * COMP30260 Artificial Intelligence for Games and Puzzles
  * Assignment 1
@@ -8,7 +10,7 @@
 
 public class Node {
 
-    private Node[] children;
+    public Node[] children;
     private Node[] originalChildrenOrder;
     private int E;
     public int order; // ONLY USED FOR TESTING PURPOSES, DELETE BEFORE SUBMISSION.
@@ -17,11 +19,6 @@ public class Node {
         this.E = E;
         this.children = new Node[childrenCount];
         originalChildrenOrder = new Node[childrenCount];
-    }
-
-    public Node(Node node) {
-        this(node.getE(), node.getChildren(false).length);
-        order = node.order;
     }
 
     public int getE() {
@@ -54,7 +51,6 @@ public class Node {
             for (int i = 0; i < children.length; i++) {
                 if (children[i] != null) continue;
                 children[i] = child;
-                originalChildrenOrder[i] = new Node(child);
                 return true;
             }
         }
@@ -94,9 +90,31 @@ public class Node {
     }
 
     public void reset() {
-        for (int i = 0; i < children.length; i++) {
-            children[i] = new Node(originalChildrenOrder[i]);
+        for (int i = 0; i < originalChildrenOrder.length; i++) {
+            Node orderChild = originalChildrenOrder[i];
+
+            SEARCH: {
+                for (int j = 0; j < children.length; j++) {
+                    Node child = children[j];
+                    if (child == orderChild) {
+                        if (i != j) {
+                            // swap nodes
+                            Node temp = children[i];
+                            children[i] = child;
+                            children[j] = temp;
+                        }
+                        // Node belongs here so break
+                        break SEARCH;
+                    }
+
+                }
+            }
+
         }
+    }
+
+    public void cloneArray() {
+        originalChildrenOrder = Arrays.copyOf(children, children.length);
     }
 
     // ONLY USED FOR TESTING PURPOSES, DELETE BEFORE SUBMISSION.
